@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تسجيل حساب جديد</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #2f3136;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .register-container {
+      width: 320px;
+      background-color: rgba(64, 68, 75, 0.9);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: block;
+      cursor: pointer;
+      background-color: #7289da;
+      overflow: hidden;
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #2f3136;
+      border: 1px solid #7289da;
+      border-radius: 5px;
+      color: white;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #7289da;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #5b6e97;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="profile-image" onclick="document.getElementById('profileImage').click();">
+      <img id="profileImagePreview" src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" alt="صورة البروفايل">
+    </div>
+
+    <h2>تسجيل حساب جديد</h2>
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <input type="text" id="username" placeholder="اسم المستخدم" required>
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="password" placeholder="كلمة المرور" required>
+      <input type="file" id="profileImage" accept="image/*" onchange="previewImage(event)">
+      <button type="submit" class="btn">تسجيل الحساب</button>
+    </form>
+  </div>
+
+  <script>
+    let profileImageData = "";
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const profileImage = document.getElementById('profileImagePreview');
+        profileImage.src = e.target.result;
+        profileImageData = e.target.result; // نخزن الصورة هنا
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      // نخزن البيانات في localStorage
+      localStorage.setItem("username", username);
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+      localStorage.setItem("profileImage", profileImageData || "https://via.placeholder.com/100");
+
+      window.location.href = "home.html";
+    }
+  </script>
+</body>
+</html>

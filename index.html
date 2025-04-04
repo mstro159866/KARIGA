@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <style>
+        /* تنسيق الصفحة */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #2f3136;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* حاوية الدوائر المتحركة في الخلفية */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+            animation: moveBubbles linear infinite;
+        }
+
+        @keyframes moveBubbles {
+            0% {
+                transform: translate(var(--start-x), var(--start-y));
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y));
+            }
+        }
+
+        /* تنسيق حاوية تسجيل الدخول مع تأثير السقوط من الأعلى */
+        .login-container {
+            width: 300px;
+            background-color: rgba(64, 68, 75, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            animation: slideDown 1s ease-out forwards; /* تأثير السقوط من الأعلى */
+        }
+
+        /* تأثير السقوط من الأعلى */
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #2f3136;
+            border: 1px solid #7289da;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #7289da;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #5b6e97;
+        }
+
+        .btn:active {
+            background-color: #4e5d77;
+        }
+
+        .register-link {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #7289da;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- حاوية الدوائر المتحركة في الخلفية -->
+    <div class="bubbles" id="bubblesContainer"></div>
+
+    <!-- حاوية تسجيل الدخول -->
+    <div class="login-container">
+        <h2>تسجيل الدخول</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="password" placeholder="كلمة المرور" required>
+            <button type="submit" class="btn">تسجيل الدخول</button>
+        </form>
+
+        <div class="register-link">
+            <p>ليس لديك حساب؟ <a href="register.html">تسجيل حساب جديد</a></p>
+        </div>
+    </div>
+
+    <script>
+        // عدد الدوائر التي سيتم إنشاؤها
+        const numberOfBubbles = 7;
+        const bubblesContainer = document.getElementById('bubblesContainer');
+
+        // إنشاء الدوائر وتعيين حركاتها العشوائية
+        for (let i = 0; i < numberOfBubbles; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            const size = Math.random() * 50 + 50; // حجم عشوائي بين 50px و 100px
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+
+            // تعيين مواقع البداية والنهاية للحركة
+            const startX = Math.random() * window.innerWidth;
+            const startY = Math.random() * window.innerHeight;
+            const endX = Math.random() * window.innerWidth;
+            const endY = Math.random() * window.innerHeight;
+
+            bubble.style.left = `${startX}px`;
+            bubble.style.top = `${startY}px`;
+
+            // تعيين قيم الحركة في الـ CSS المتغيرات
+            bubble.style.setProperty('--start-x', `${startX}px`);
+            bubble.style.setProperty('--start-y', `${startY}px`);
+            bubble.style.setProperty('--end-x', `${endX - startX}px`);
+            bubble.style.setProperty('--end-y', `${endY - startY}px`);
+
+            // تعيين مدة الحركة
+            const duration = Math.random() * 5 + 5; // مدة عشوائية بين 5s و 10s
+            bubble.style.animationDuration = `${duration}s`;
+
+            bubblesContainer.appendChild(bubble);
+        }
+
+        // معالجة تسجيل الدخول
+        function handleLogin(event) {
+            event.preventDefault();  // منع إرسال النموذج بشكل افتراضي
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // التحقق من البيانات المخزنة في localStorage
+            const storedEmail = localStorage.getItem('email');
+            const storedPassword = localStorage.getItem('password');
+
+            if (email === storedEmail && password === storedPassword) {
+                // تسجيل الدخول الناجح
+                window.location.href = "home.html"; // الانتقال إلى الصفحة الرئيسية
+            } else {
+                // إذا كانت البيانات غير صحيحة
+                alert("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+            }
+        }
+    </script>
+
+</body>
+</html>
